@@ -67,11 +67,14 @@ EOF
 ENV PATH="/opt/qemu-tricore/bin:${PATH}"
 
 # Install RH850 GCC toolchain (x86_64 only)
+ARG RH850_TOOLCHAIN_URL=https://github.com/linumiz/rh850-gcc-toolchain/releases/download/v1.2.0/v850-elf-toolchain-linux-x86_64.tar.gz
+ARG RH850_TOOLCHAIN_SHA256=a2194a060295008a2bd67db0e24c1cda8a795eba832b49b3f1d4cbb64cb242bd
 RUN <<EOF
 	if [ "${HOSTTYPE}" = "x86_64" ]; then
 		apt-get update
 		apt-get install -y --no-install-recommends libexpat1
-		wget ${WGET_ARGS} https://github.com/linumiz/rh850-gcc-toolchain/releases/download/v1.0.0/v850-elf-toolchain-linux-x86_64.tar.gz
+		wget ${WGET_ARGS} -O v850-elf-toolchain-linux-x86_64.tar.gz ${RH850_TOOLCHAIN_URL}
+		echo "${RH850_TOOLCHAIN_SHA256}  v850-elf-toolchain-linux-x86_64.tar.gz" | sha256sum -c -
 		mkdir -p /opt/toolchains/v850-elf
 		tar -xzf v850-elf-toolchain-linux-x86_64.tar.gz -C /opt/toolchains/v850-elf
 		rm v850-elf-toolchain-linux-x86_64.tar.gz
@@ -85,11 +88,14 @@ EOF
 ENV RH850_TOOLCHAIN_PATH=/opt/toolchains/v850-elf
 
 # Install RH850 QEMU (x86_64 only)
+ARG RH850_QEMU_URL=https://github.com/linumiz/qemu-rh850/releases/download/rh850-v1.2.0/qemu-rh850-linux-x86_64.tar.gz
+ARG RH850_QEMU_SHA256=1e1d3d5d3a365ec24047e9128b11df09fdfddb2b385aa4c77dc45253aa448f6b
 RUN <<EOF
 	if [ "${HOSTTYPE}" = "x86_64" ]; then
 		apt-get update
 		apt-get install -y --no-install-recommends libglib2.0-0t64
-		wget ${WGET_ARGS} https://github.com/linumiz/qemu-rh850/releases/download/v1.0.0/qemu-rh850-linux-x86_64.tar.gz
+		wget ${WGET_ARGS} -O qemu-rh850-linux-x86_64.tar.gz ${RH850_QEMU_URL}
+		echo "${RH850_QEMU_SHA256}  qemu-rh850-linux-x86_64.tar.gz" | sha256sum -c -
 		mkdir -p /opt/qemu-rh850
 		tar -xzf qemu-rh850-linux-x86_64.tar.gz -C /opt/qemu-rh850
 		rm qemu-rh850-linux-x86_64.tar.gz
